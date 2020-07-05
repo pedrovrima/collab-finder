@@ -3,6 +3,8 @@ import axios from "axios"
 import SelectFramework from "./components/select-framework.js"
 import SelectLabel from "./components/select-label.js"
 import ResultTable from "./components/result-table.js"
+import fakeData from "./testdata"
+console.log(fakeData)
 
 export default function  (){
     var token = JSON.parse(window.sessionStorage.getItem("token"))
@@ -15,10 +17,9 @@ export default function  (){
     })
 
 
-    let [reposGotten,setRepos]=useState([])
+    let [reposGotten,setRepos]=useState(fakeData.data)
     let [framework,setFrame]=useState("react")
     let [label,setLabel]=useState("bug")
-    let [seeIssues,setSeeIssues]=useState(false)
 
 
     const getApiClick = async ()=>{
