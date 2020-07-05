@@ -5,63 +5,15 @@ import {
   AccordionHeader,
   AccordionPanel,
 } from "react-accordion-with-header";
+import parse from 'html-react-parser';
 
-// let Header = (props)=>{
+import showdown  from 'showdown'
 
-//     return(
-//         <div>
-//         <p className="border px-4 py-2">{props.repo.info.full_name}</p>
-//       </div>
-//     )
-// }
-
-// class BodyTpl extends React.Component {
-//     render() {
-//       return <div>Look at this {this.props.item}</div>;
-//     }
-//   }
-
-// export default (props) => {
-//   return (
-//     <div className="flex justify-center">
-//       <AccordionWithHeader>
-//         {props.repos.map((repo, i) => {
-//           if (repo) {
-//             return (
-//               <AccordionNode key={i}>
-//                 <AccordionHeader >
-//                   <Header repo={repo}></Header>
-//                 </AccordionHeader>
-//                 <AccordionPanel title={repo.info.full_name}>
-//                   {/* <div>
-//                     <p className="border px-4 py-2">{repo.info.full_name}</p>
-//                     <p className="border px-4 py-2">{repo.issues.length}</p>
-//                     <p className="border px-4 py-2">
-//                       {repo.info.stargazers_count}
-//                     </p>
-//                   </div> */}
-//                                     <BodyTpl item={repo}></BodyTpl>
-
-//                 </AccordionPanel>
-//               </AccordionNode>
-//             );
-//           }
-//         })}
-//       </AccordionWithHeader>
-//     </div>
-//   );
-// };
-
-// note: due to the warning "Stateless function components cannot be given refs. Attempts to access this ref will fail."
-// the components passed into <AccordionPanel> must be class components
-// this allows to measure the height of the element via refs
-class BodyTpl extends React.Component {
-  render() {
-    return <div>Look at this {this.props.item}</div>;
-  }
-}
 
 let MyAccordion = (props) => {
+
+  var converter = new showdown.Converter()
+
   return (
     <AccordionWithHeader className="w-custom border bg-gray-100 my-2 shadow-blue">
       {props.repos
@@ -71,18 +23,27 @@ let MyAccordion = (props) => {
             return (
               <AccordionNode key={i}>
                 <AccordionHeader
-                  horizontalAlignment="centerSpaceAround"
+                  horizontalAlignment="spaceBetween"
                   verticalAlignment="center"
                 >
-                  <div>This is the header</div>
-                  <div>It has flexbox layout</div>
+                  <div>{repo.info.full_name.split("/")[1]}</div>
+                  <div style={{ textAlign: "right" }}>
+                    {" "}
+                    {repo.info.stargazers_count}
+                  </div>
                 </AccordionHeader>
                 <AccordionPanel>
-                  <p >{repo.info.full_name}</p>
-                  <p >{repo.issues.length}</p>
-                  <p >
-                    {repo.info.stargazers_count}
-                  </p>
+                  <div className={"p-6"}>
+                    <p>{repo.info.description}</p>
+                  </div>
+                  <div>
+                    <ul>
+                      {repo.issues.map((issue, j) => {
+                        // return "a"
+                        return <div className="p-6"> {parse(converter.makeHtml(issue.body))}</div>;
+                      })}
+                    </ul>
+                  </div>
                 </AccordionPanel>
               </AccordionNode>
             );
